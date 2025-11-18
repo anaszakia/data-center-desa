@@ -62,7 +62,8 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Alamat</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Desa</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Kecamatan</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status Perkawinan</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status Kependudukan</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Aksi</th>
                     </tr>
                 </thead>
@@ -79,6 +80,13 @@
                         <td class="px-4 py-3">{{ $p->desa }}</td>
                         <td class="px-4 py-3">{{ $p->kecamatan }}</td>
                         <td class="px-4 py-3">{{ $p->status_perkawinan }}</td>
+                        <td class="px-4 py-3">
+                            @if($p->status)
+                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Aktif</span>
+                            @else
+                                <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">Tidak Aktif</span>
+                            @endif
+                        </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('penduduk.show', $p) }}" class="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors">

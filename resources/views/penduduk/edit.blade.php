@@ -108,6 +108,11 @@
                     @error('no_hp')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
+                <div class="md:col-span-2 flex items-center mb-4">
+                    <input type="hidden" name="status" value="0">
+                    <input type="checkbox" name="status" id="status" value="1" class="mr-2" {{ old('status', $penduduk->status) ? 'checked' : '' }}>
+                    <label for="status" class="text-sm font-medium text-gray-700">Status Aktif</label>
+                </div>
             <div class="flex gap-3 pt-6 border-t border-gray-200 mt-6">
                 <button type="submit" class="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     <i class="fas fa-save mr-2"></i>Update Data

@@ -83,6 +83,7 @@ class PendudukController extends Controller
                         'nama_ayah' => $row[13] ?? null,
                         'nama_ibu' => $row[14] ?? null,
                         'no_hp' => $row[15] ?? null,
+                        'status' => !empty($row[16]) ? filter_var($row[16], FILTER_VALIDATE_BOOLEAN) : true,
                     ];
                     
                     // Validasi data
@@ -177,7 +178,9 @@ class PendudukController extends Controller
             'nama_ayah' => 'nullable|string|max:100',
             'nama_ibu' => 'nullable|string|max:100',
             'no_hp' => 'nullable|string|max:15',
+            'status' => 'nullable|boolean',
         ]);
+        $validated['status'] = isset($validated['status']) ? (bool)$validated['status'] : true;
         Penduduk::create($validated);
         return redirect()->route('penduduk.index')->with('success', 'Data penduduk berhasil ditambahkan!');
     }
@@ -213,7 +216,9 @@ class PendudukController extends Controller
             'nama_ayah' => 'nullable|string|max:100',
             'nama_ibu' => 'nullable|string|max:100',
             'no_hp' => 'nullable|string|max:15',
+            'status' => 'nullable|boolean',
         ]);
+        $validated['status'] = isset($validated['status']) ? (bool)$validated['status'] : false;
         $penduduk->update($validated);
         return redirect()->route('penduduk.index')->with('success', 'Data penduduk berhasil diperbarui!');
     }

@@ -23,6 +23,16 @@
         <h2 class="text-lg font-bold text-gray-900 mb-4">Informasi Penduduk</h2>
         <div class="grid grid-cols-2 gap-6">
             <div><label class="text-xs font-semibold text-gray-600 uppercase">NIK</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->nik }}</p></div>
+            <div>
+                <label class="text-xs font-semibold text-gray-600 uppercase">Status Kependudukan</label>
+                <p class="text-sm mt-1">
+                    @if($penduduk->status)
+                        <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Aktif</span>
+                    @else
+                        <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">Tidak Aktif</span>
+                    @endif
+                </p>
+            </div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">No KK</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->no_kk ?? '-' }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Nama</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->nama }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Jenis Kelamin</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p></div>
