@@ -153,6 +153,15 @@ Route::middleware(['auth', 'log.sensitive'])->group(function () {
     Route::get('/penduduk/create', [\App\Http\Controllers\PendudukController::class, 'create'])
         ->middleware('permission:create penduduk')
         ->name('penduduk.create');
+    Route::get('/penduduk/import', [\App\Http\Controllers\PendudukController::class, 'importForm'])
+        ->middleware('permission:create penduduk')
+        ->name('penduduk.import.form');
+    Route::post('/penduduk/import', [\App\Http\Controllers\PendudukController::class, 'import'])
+        ->middleware('permission:create penduduk')
+        ->name('penduduk.import');
+    Route::post('/penduduk/bulk-delete', [\App\Http\Controllers\PendudukController::class, 'bulkDelete'])
+        ->middleware('permission:delete penduduk')
+        ->name('penduduk.bulkDelete');
     Route::post('/penduduk', [\App\Http\Controllers\PendudukController::class, 'store'])
         ->middleware('permission:create penduduk')
         ->name('penduduk.store');

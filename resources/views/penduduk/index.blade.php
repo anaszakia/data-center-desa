@@ -9,13 +9,21 @@
             <p class="text-sm text-gray-600 mt-1">Manajemen data penduduk desa</p>
         </div>
         @can('create penduduk')
-        <a href="{{ route('penduduk.create') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
-            <i class="fas fa-plus mr-2"></i>Tambah Penduduk
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('penduduk.create') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                <i class="fas fa-plus mr-2"></i>Tambah Penduduk
+            </a>
+            <a href="{{ asset('template_penduduk.xlsx') }}" class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-500 transition-colors">
+                <i class="fas fa-file-excel mr-2"></i>Download Template
+            </a>
+            <a href="{{ route('penduduk.import.form') }}" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-500 transition-colors">
+                <i class="fas fa-upload mr-2"></i>Import Excel
+            </a>
+        </div>
         @endcan
     </div>
     <div class="bg-white rounded-lg border border-gray-200">
-        <div class="p-4 border-b border-gray-200">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
             <form method="GET" action="{{ route('penduduk.index') }}" class="flex gap-3">
                 <div class="flex-1">
                     <input type="text" name="search" value="{{ request('search') }}"
@@ -31,12 +39,23 @@
                 </a>
                 @endif
             </form>
+            @can('delete penduduk')
+            <form method="POST" action="{{ route('penduduk.bulkDelete') }}" id="bulkDeleteForm" style="display:none" onsubmit="return confirm('Yakin ingin menghapus data terpilih?')">
+                @csrf
+                <input type="hidden" name="ids" id="bulkDeleteIds">
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-trash mr-2"></i>Hapus Terpilih
+                </button>
+            </form>
+            @endcan
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
+                        <th class="px-4 py-3"><input type="checkbox" id="selectAll"></th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">NIK</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">NO KK</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Nama</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">JK</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Tempat/Tgl Lahir</th>
@@ -50,7 +69,9 @@
                 <tbody class="divide-y divide-gray-200">
                 @forelse($penduduk as $p)
                     <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3"><input type="checkbox" class="rowCheckbox" value="{{ $p->id }}"></td>
                         <td class="px-4 py-3">{{ $p->nik }}</td>
+                        <td class="px-4 py-3">{{ $p->no_kk }}</td>
                         <td class="px-4 py-3">{{ $p->nama }}</td>
                         <td class="px-4 py-3">{{ $p->jenis_kelamin }}</td>
                         <td class="px-4 py-3">{{ $p->tempat_lahir }}, {{ \Carbon\Carbon::parse($p->tanggal_lahir)->format('d-m-Y') }}</td>
@@ -81,7 +102,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-4 py-8 text-center">
+                        <td colspan="10" class="px-4 py-8 text-center">
                             <div class="flex flex-col items-center">
                                 <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-3">
                                     <i class="fas fa-users text-gray-400 text-xl"></i>
@@ -101,5 +122,28 @@
         </div>
         @endif
     </div>
+    <script>
+        function updateBulkDeleteVisibility() {
+            const checked = document.querySelectorAll('.rowCheckbox:checked').length > 0;
+            document.getElementById('bulkDeleteForm').style.display = checked ? 'block' : 'none';
+        }
+        document.getElementById('selectAll').addEventListener('change', function() {
+            let checked = this.checked;
+            document.querySelectorAll('.rowCheckbox').forEach(cb => cb.checked = checked);
+            updateBulkDeleteVisibility();
+        });
+        document.querySelectorAll('.rowCheckbox').forEach(cb => {
+            cb.addEventListener('change', updateBulkDeleteVisibility);
+        });
+        updateBulkDeleteVisibility();
+        document.getElementById('bulkDeleteForm')?.addEventListener('submit', function(e) {
+            let ids = Array.from(document.querySelectorAll('.rowCheckbox:checked')).map(cb => cb.value);
+            document.getElementById('bulkDeleteIds').value = ids.join(',');
+            if (ids.length === 0) {
+                alert('Pilih data yang ingin dihapus!');
+                e.preventDefault();
+            }
+        });
+    </script>
 </div>
 @endsection
