@@ -17,6 +17,7 @@
             @csrf
             <div x-data="{ 
                 tab: 1,
+                errorMessage: '',
                 canTab2() {
                     const nik = document.getElementById('nik').value;
                     const nama = document.getElementById('nama').value;
@@ -30,13 +31,30 @@
                     const kec = document.getElementById('kecamatan').value;
                     const alamat = document.getElementById('alamat_lengkap').value;
                     return desa.length > 0 && kec.length > 0 && alamat.length > 0;
+                },
+                goToTab2() {
+                    if (!this.canTab2()) {
+                        this.errorMessage = 'Mohon lengkapi semua field wajib (NIK 16 digit, Nama, Jenis Kelamin, Tempat Lahir, Tanggal Lahir)';
+                        return;
+                    }
+                    this.errorMessage = '';
+                    this.tab = 2;
+                },
+                goToTab3() {
+                    if (!this.canTab3()) {
+                        this.errorMessage = 'Mohon lengkapi semua field wajib (Desa, Kecamatan, Alamat Lengkap)';
+                        return;
+                    }
+                    this.errorMessage = '';
+                    this.tab = 3;
                 }
             }">
+                <div x-show="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" x-text="errorMessage"></div>
                 <div class="mb-6 border-b border-gray-200">
                     <nav class="flex gap-2">
-                        <button type="button" :class="tab === 1 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" @click="tab = 1">Data Diri</button>
-                        <button type="button" :class="tab === 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" :disabled="!canTab2()" @click="if(canTab2()) tab = 2">Alamat</button>
-                        <button type="button" :class="tab === 3 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" :disabled="!canTab3()" @click="if(canTab3()) tab = 3">Data Pendukung</button>
+                        <button type="button" :class="tab === 1 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" @click="tab = 1; errorMessage = ''">Data Diri</button>
+                        <button type="button" :class="tab === 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" :disabled="!canTab2()" @click="goToTab2()">Alamat</button>
+                        <button type="button" :class="tab === 3 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'" class="px-4 py-2 text-sm font-medium rounded-t-lg" :disabled="!canTab3()" @click="goToTab3()">Data Pendukung</button>
                     </nav>
                 </div>
                 <div x-show="tab === 1">
@@ -77,7 +95,7 @@
                         </div>
                     </div>
                     <div class="flex gap-3 pt-6">
-                        <button type="button" class="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors" @click="if(canTab2()) tab = 2">Lanjut ke Alamat</button>
+                        <button type="button" class="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors" @click="goToTab2()">Lanjut ke Alamat</button>
                     </div>
                 </div>
                 <div x-show="tab === 2">
@@ -114,7 +132,7 @@
                         </div>
                     </div>
                     <div class="flex gap-3 pt-6">
-                        <button type="button" class="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors" @click="if(canTab3()) tab = 3">Lanjut ke Data Pendukung</button>
+                        <button type="button" class="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors" @click="goToTab3()">Lanjut ke Data Pendukung</button>
                     </div>
                 </div>
                 <div x-show="tab === 3">

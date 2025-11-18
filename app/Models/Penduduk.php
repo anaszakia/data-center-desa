@@ -47,4 +47,48 @@ class Penduduk extends Model
             }
         });
     }
+
+    // Mutator: Enkripsi sebelum simpan
+    public function setNikAttribute($value)
+    {
+        $this->attributes['nik'] = $value ? encrypt($value) : null;
+    }
+
+    public function setNoKkAttribute($value)
+    {
+        $this->attributes['no_kk'] = $value ? encrypt($value) : null;
+    }
+
+    public function setNoHpAttribute($value)
+    {
+        $this->attributes['no_hp'] = $value ? encrypt($value) : null;
+    }
+
+    // Accessor: Dekripsi saat ambil
+    public function getNikAttribute($value)
+    {
+        try {
+            return $value ? decrypt($value) : null;
+        } catch (\Exception $e) {
+            return $value; // Return raw value jika gagal decrypt (data lama)
+        }
+    }
+
+    public function getNoKkAttribute($value)
+    {
+        try {
+            return $value ? decrypt($value) : null;
+        } catch (\Exception $e) {
+            return $value;
+        }
+    }
+
+    public function getNoHpAttribute($value)
+    {
+        try {
+            return $value ? decrypt($value) : null;
+        } catch (\Exception $e) {
+            return $value;
+        }
+    }
 }

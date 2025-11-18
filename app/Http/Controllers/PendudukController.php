@@ -90,9 +90,29 @@ class PendudukController extends Controller
                         'status_dalam_keluarga' => $row[20] ?? null,
                     ];
                     
+                    // Cek NIK unique secara manual
+                    $existingNik = Penduduk::all()->first(function($p) use ($data) {
+                        return $p->nik === $data['nik'];
+                    });
+                    if ($existingNik) {
+                        $errors[] = "Baris " . ($index + 2) . ": NIK sudah terdaftar";
+                        continue;
+                    }
+                    
+                    // Cek No KK unique jika diisi
+                    if (!empty($data['no_kk'])) {
+                        $existingKk = Penduduk::all()->first(function($p) use ($data) {
+                            return $p->no_kk === $data['no_kk'];
+                        });
+                        if ($existingKk) {
+                            $errors[] = "Baris " . ($index + 2) . ": No KK sudah terdaftar";
+                            continue;
+                        }
+                    }
+                    
                     // Validasi data
                     $validator = \Validator::make($data, [
-                        'nik' => 'required|string|size:16|unique:penduduk,nik',
+                        'nik' => 'required|string|size:16',
                         'no_kk' => 'nullable|string|size:16',
                         'nama' => 'required|string|max:100',
                         'jenis_kelamin' => 'required|in:L,P',
@@ -169,8 +189,27 @@ class PendudukController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create penduduk');
+        
+        // Validasi NIK unique secara manual (karena terenkripsi)
+        $existingNik = Penduduk::all()->first(function($p) use ($request) {
+            return $p->nik === $request->nik;
+        });
+        if ($existingNik) {
+            return back()->withErrors(['nik' => 'NIK sudah terdaftar'])->withInput();
+        }
+        
+        // Validasi No KK unique jika diisi
+        if ($request->filled('no_kk')) {
+            $existingKk = Penduduk::all()->first(function($p) use ($request) {
+                return $p->no_kk === $request->no_kk;
+            });
+            if ($existingKk) {
+                return back()->withErrors(['no_kk' => 'No KK sudah terdaftar'])->withInput();
+            }
+        }
+        
         $validated = $request->validate([
-            'nik' => 'required|string|size:16|unique:penduduk,nik',
+            'nik' => 'required|string|size:16',
             'no_kk' => 'nullable|string|size:16',
             'nama' => 'required|string|max:100',
             'jenis_kelamin' => 'required|in:L,P',
@@ -211,8 +250,27 @@ class PendudukController extends Controller
     public function update(Request $request, Penduduk $penduduk)
     {
         $this->authorize('edit penduduk');
+        
+        // Validasi NIK unique secara manual (kecuali data sendiri)
+        $existingNik = Penduduk::all()->first(function($p) use ($request, $penduduk) {
+            return $p->id !== $penduduk->id && $p->nik === $request->nik;
+        });
+        if ($existingNik) {
+            return back()->withErrors(['nik' => 'NIK sudah terdaftar'])->withInput();
+        }
+        
+        // Validasi No KK unique jika diisi (kecuali data sendiri)
+        if ($request->filled('no_kk')) {
+            $existingKk = Penduduk::all()->first(function($p) use ($request, $penduduk) {
+                return $p->id !== $penduduk->id && $p->no_kk === $request->no_kk;
+            });
+            if ($existingKk) {
+                return back()->withErrors(['no_kk' => 'No KK sudah terdaftar'])->withInput();
+            }
+        }
+        
         $validated = $request->validate([
-            'nik' => 'required|string|size:16|unique:penduduk,nik,' . $penduduk->id,
+            'nik' => 'required|string|size:16',
             'no_kk' => 'nullable|string|size:16',
             'nama' => 'required|string|max:100',
             'jenis_kelamin' => 'required|in:L,P',
@@ -271,8 +329,16 @@ class PendudukController extends Controller
 
     public function apiStore(Request $request)
     {
+        // Validasi NIK unique
+        $existingNik = Penduduk::all()->first(function($p) use ($request) {
+            return $p->nik === $request->nik;
+        });
+        if ($existingNik) {
+            return response()->json(['message' => 'NIK sudah terdaftar'], 422);
+        }
+        
         $validated = $request->validate([
-            'nik' => 'required|string|size:16|unique:penduduk,nik',
+            'nik' => 'required|string|size:16',
             'no_kk' => 'nullable|string|size:16',
             'nama' => 'required|string|max:100',
             'jenis_kelamin' => 'required|in:L,P',
@@ -295,8 +361,16 @@ class PendudukController extends Controller
 
     public function apiUpdate(Request $request, Penduduk $penduduk)
     {
+        // Validasi NIK unique (kecuali data sendiri)
+        $existingNik = Penduduk::all()->first(function($p) use ($request, $penduduk) {
+            return $p->id !== $penduduk->id && $p->nik === $request->nik;
+        });
+        if ($existingNik) {
+            return response()->json(['message' => 'NIK sudah terdaftar'], 422);
+        }
+        
         $validated = $request->validate([
-            'nik' => 'required|string|size:16|unique:penduduk,nik,' . $penduduk->id,
+            'nik' => 'required|string|size:16',
             'no_kk' => 'nullable|string|size:16',
             'nama' => 'required|string|max:100',
             'jenis_kelamin' => 'required|in:L,P',
