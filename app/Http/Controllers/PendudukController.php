@@ -84,6 +84,10 @@ class PendudukController extends Controller
                         'nama_ibu' => $row[14] ?? null,
                         'no_hp' => $row[15] ?? null,
                         'status' => !empty($row[16]) ? filter_var($row[16], FILTER_VALIDATE_BOOLEAN) : true,
+                        'agama' => $row[17] ?? null,
+                        'pendidikan_terakhir' => $row[18] ?? null,
+                        'pekerjaan' => $row[19] ?? null,
+                        'status_dalam_keluarga' => $row[20] ?? null,
                     ];
                     
                     // Validasi data
@@ -104,6 +108,10 @@ class PendudukController extends Controller
                         'nama_ayah' => 'nullable|string|max:100',
                         'nama_ibu' => 'nullable|string|max:100',
                         'no_hp' => 'nullable|string|max:15',
+                        'agama' => 'nullable|string|max:50',
+                        'pendidikan_terakhir' => 'nullable|string|max:100',
+                        'pekerjaan' => 'nullable|string|max:100',
+                        'status_dalam_keluarga' => 'nullable|in:Kepala Keluarga,Istri,Anak,Lain-lain',
                     ]);
                     
                     if ($validator->fails()) {
@@ -179,6 +187,10 @@ class PendudukController extends Controller
             'nama_ibu' => 'nullable|string|max:100',
             'no_hp' => 'nullable|string|max:15',
             'status' => 'nullable|boolean',
+            'agama' => 'nullable|string|max:50',
+            'pendidikan_terakhir' => 'nullable|string|max:100',
+            'pekerjaan' => 'nullable|string|max:100',
+            'status_dalam_keluarga' => 'nullable|in:Kepala Keluarga,Istri,Anak,Lain-lain',
         ]);
         $validated['status'] = isset($validated['status']) ? (bool)$validated['status'] : true;
         Penduduk::create($validated);
@@ -217,6 +229,10 @@ class PendudukController extends Controller
             'nama_ibu' => 'nullable|string|max:100',
             'no_hp' => 'nullable|string|max:15',
             'status' => 'nullable|boolean',
+            'agama' => 'nullable|string|max:50',
+            'pendidikan_terakhir' => 'nullable|string|max:100',
+            'pekerjaan' => 'nullable|string|max:100',
+            'status_dalam_keluarga' => 'nullable|in:Kepala Keluarga,Istri,Anak,Lain-lain',
         ]);
         $validated['status'] = isset($validated['status']) ? (bool)$validated['status'] : false;
         $penduduk->update($validated);

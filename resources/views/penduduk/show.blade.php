@@ -47,6 +47,10 @@
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Nama Ayah</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->nama_ayah ?? '-' }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Nama Ibu</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->nama_ibu ?? '-' }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">No HP</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->no_hp ?? '-' }}</p></div>
+            <div><label class="text-xs font-semibold text-gray-600 uppercase">Agama</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->agama ?? '-' }}</p></div>
+            <div><label class="text-xs font-semibold text-gray-600 uppercase">Pendidikan Terakhir</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->pendidikan_terakhir ?? '-' }}</p></div>
+            <div><label class="text-xs font-semibold text-gray-600 uppercase">Pekerjaan</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->pekerjaan ?? '-' }}</p></div>
+            <div><label class="text-xs font-semibold text-gray-600 uppercase">Status Dalam Keluarga</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->status_dalam_keluarga ?? '-' }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Dibuat</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->created_at?->format('d M Y, H:i') ?? '-' }}</p></div>
             <div><label class="text-xs font-semibold text-gray-600 uppercase">Diubah</label><p class="text-sm text-gray-900 mt-1">{{ $penduduk->updated_at?->format('d M Y, H:i') ?? '-' }}</p></div>
         </div>

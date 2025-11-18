@@ -29,6 +29,10 @@ class Penduduk extends Model
         'nama_ibu',
         'no_hp',
         'status',
+        'agama',
+        'pendidikan_terakhir',
+        'pekerjaan',
+        'status_dalam_keluarga',
     ];
 
     public $incrementing = false;
